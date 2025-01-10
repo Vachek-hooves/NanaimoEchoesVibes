@@ -50,7 +50,8 @@ const SpotDetails = ({route}) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={{backgroundColor: 'rgba(251, 4, 49, 0.5)'}}>
+      <ScrollView
+        contentContainerStyle={{}}>
         <Image source={{uri: spot.image}} style={styles.image} />
 
         <TouchableOpacity
@@ -124,6 +125,7 @@ const styles = StyleSheet.create({
     borderColor: 'red',
     borderRadius: 50,
     overflow: 'hidden',
+    backgroundColor: 'rgba(251, 4, 49, 0.5)',
   },
   image: {
     width: width,
