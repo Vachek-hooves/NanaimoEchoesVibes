@@ -1,8 +1,10 @@
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useState, useEffect} from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 const Header = () => {
+  const navigation = useNavigation();
   const [nickname, setNickname] = useState('');
 
   useEffect(() => {
@@ -29,7 +31,9 @@ const Header = () => {
           Your journey through{'\n'}Nanaimo continues...
         </Text>
       </View>
-      <TouchableOpacity style={styles.settingsButton}>
+      <TouchableOpacity
+        style={styles.settingsButton}
+        onPress={() => navigation.navigate('Name')}>
         <Image
           source={require('../../assets/image/icons/settings.png')}
           style={{width: 30, height: 30}}
