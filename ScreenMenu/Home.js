@@ -1,51 +1,11 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  SafeAreaView,
-  Image,
-} from 'react-native';
-import React, {useState, useEffect} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import Header from '../components/ui/Header';
 
 const Home = () => {
-  const [nickname, setNickname] = useState('');
-
-  useEffect(() => {
-    loadUserData();
-  }, []);
-
-  const loadUserData = async () => {
-    try {
-      const userData = await AsyncStorage.getItem('userData');
-      if (userData) {
-        const {name} = JSON.parse(userData);
-        setNickname(name);
-      }
-    } catch (error) {
-      console.error('Error loading user data:', error);
-    }
-  };
-
   return (
     <View style={{flex: 1}}>
       {/* <SafeAreaView style={styles.container}> */}
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.welcomeText}>Welcome back, {nickname}!</Text>
-          <Text style={styles.subtitleText}>
-            Your journey through{'\n'}Nanaimo continues...
-          </Text>
-        </View>
-        <TouchableOpacity style={styles.settingsButton}>
-          <Image
-            source={require('../assets/image/icons/settings.png')}
-            style={{width: 30, height: 30}}
-          />
-        </TouchableOpacity>
-      </View>
-
+      <Header />
       <View style={styles.content}>
         <TouchableOpacity style={styles.section}>
           <View style={styles.sectionHeader}>
@@ -76,38 +36,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  header: {
-    backgroundColor: '#DC143C',
-    padding: 20,
-    paddingBottom: 30,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    paddingTop: 80,
-  },
-  welcomeText: {
-    color: 'white',
-    fontSize: 24,
-    fontWeight: '500',
-    marginBottom: 8,
-  },
-  subtitleText: {
-    color: 'white',
-    fontSize: 28,
-    fontWeight: 'bold',
-  },
-  settingsButton: {
-    // width: 44,
-    // height: 44,
-    borderRadius: 22,
-    backgroundColor: '#000',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 15,
-    borderRadius: '50%',
   },
   settingsIcon: {
     fontSize: 24,
