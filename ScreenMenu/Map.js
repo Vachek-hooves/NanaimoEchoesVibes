@@ -1,32 +1,31 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, View, Dimensions, Image} from 'react-native';
 import MapView, {PROVIDER_DEFAULT, Marker} from 'react-native-maps';
 import MainLayout from '../components/layout/MainLayout';
 import {NANAIMO_REGION} from '../data/mainLoacation';
-import { useNanaimoContext } from '../store/context';
+import {useNanaimoContext} from '../store/context';
 import AddSpotModal from '../components/actions/AddSpotModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 const Map = () => {
-  const { store, setStore } = useNanaimoContext();
+  const {store, setStore} = useNanaimoContext();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
 
-  const handleLongPress = (event) => {
+  const handleLongPress = event => {
     const coordinates = event.nativeEvent.coordinate;
     setSelectedLocation(coordinates);
     setModalVisible(true);
   };
 
-  const handleSaveSpot = async (newSpot) => {
+  const handleSaveSpot = async newSpot => {
     console.log('newSpot', newSpot);
     try {
       const updatedPlaces = [...store.places, newSpot];
       await AsyncStorage.setItem('places', JSON.stringify(updatedPlaces));
       setStore(prev => ({
         ...prev,
-        places: updatedPlaces
+        places: updatedPlaces,
       }));
       setModalVisible(false);
     } catch (error) {
@@ -35,7 +34,7 @@ const Map = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <MainLayout>
       <MapView
         style={styles.map}
         provider={PROVIDER_DEFAULT}
@@ -43,18 +42,16 @@ const Map = () => {
         showsUserLocation={true}
         showsMyLocationButton={true}
         showsCompass={true}
-        onLongPress={handleLongPress}
-      >
-        {store.places.map((place) => (
+        onLongPress={handleLongPress}>
+        {store.places.map(place => (
           <Marker
             key={place.id}
             coordinate={place.coordinates}
             title={place.header}
-            description={place.text}
-          >
+            description={place.text}>
             <View style={styles.markerContainer}>
-              <Image 
-                source={{ uri: place.image }} 
+              <Image
+                source={{uri: place.image}}
                 style={styles.markerImage}
                 resizeMode="cover"
               />
@@ -69,7 +66,7 @@ const Map = () => {
         onSave={handleSaveSpot}
         coordinates={selectedLocation}
       />
-    </View>
+    </MainLayout>
   );
 };
 
@@ -81,7 +78,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    height: Dimensions.get('screen').height+100,
   },
   markerContainer: {
     width: 70,
