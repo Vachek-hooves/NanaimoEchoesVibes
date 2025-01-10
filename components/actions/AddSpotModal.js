@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   Modal,
   View,
@@ -7,11 +7,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  Alert
+  Alert,
 } from 'react-native';
-import { launchImageLibrary } from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 
-const AddSpotModal = ({ visible, onClose, onSave, coordinates }) => {
+const AddSpotModal = ({visible, onClose, onSave, coordinates}) => {
   const [header, setHeader] = useState('');
   const [text, setText] = useState('');
   const [image, setImage] = useState(null);
@@ -62,15 +62,16 @@ const AddSpotModal = ({ visible, onClose, onSave, coordinates }) => {
       visible={visible}
       animationType="slide"
       transparent={true}
-      onRequestClose={onClose}
-    >
+      onRequestClose={onClose}>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Add New Spot</Text>
-          
-          <TouchableOpacity style={styles.imageContainer} onPress={handleImagePick}>
+
+          <TouchableOpacity
+            style={styles.imageContainer}
+            onPress={handleImagePick}>
             {image ? (
-              <Image source={{ uri: image }} style={styles.imagePreview} />
+              <Image source={{uri: image}} style={styles.imagePreview} />
             ) : (
               <View style={styles.imagePlaceholder}>
                 <Text style={styles.imagePlaceholderText}>Add Photo</Text>
@@ -97,16 +98,14 @@ const AddSpotModal = ({ visible, onClose, onSave, coordinates }) => {
           />
 
           <View style={styles.buttonContainer}>
-            <TouchableOpacity 
-              style={[styles.button, styles.cancelButton]} 
-              onPress={onClose}
-            >
+            <TouchableOpacity
+              style={[styles.button, styles.cancelButton]}
+              onPress={onClose}>
               <Text style={styles.buttonText}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.button, styles.saveButton]} 
-              onPress={handleSave}
-            >
+            <TouchableOpacity
+              style={[styles.button, styles.saveButton]}
+              onPress={handleSave}>
               <Text style={styles.buttonText}>Save</Text>
             </TouchableOpacity>
           </View>
@@ -119,7 +118,7 @@ const AddSpotModal = ({ visible, onClose, onSave, coordinates }) => {
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    // backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'flex-end',
   },
   modalContent: {
@@ -128,12 +127,14 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     padding: 20,
     height: '90%',
+    backgroundColor: 'rgba(220, 20, 60, 1)',
   },
   modalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color:'#fff'
   },
   imageContainer: {
     alignSelf: 'center',
@@ -168,6 +169,8 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 16,
     fontSize: 16,
+    
+    backgroundColor:'#fff'
   },
   textArea: {
     height: 100,
@@ -188,10 +191,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#666',
   },
   saveButton: {
-    backgroundColor: '#DC143C',
+    backgroundColor: '#fff',
   },
   buttonText: {
-    color: 'white',
+    color: '#DC143C',
     fontSize: 16,
     fontWeight: 'bold',
   },
