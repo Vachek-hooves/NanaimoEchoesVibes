@@ -1,4 +1,3 @@
-import React from 'react';
 import {StyleSheet, View, Dimensions} from 'react-native';
 import MapView, {PROVIDER_DEFAULT} from 'react-native-maps';
 import MainLayout from '../components/layout/MainLayout';
