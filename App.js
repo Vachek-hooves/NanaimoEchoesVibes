@@ -12,8 +12,8 @@ function App() {
     <ContextProvider>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="NavigationMenu" component={NavigationMenu} />
           <Stack.Screen name="HiScreen" component={HiScreen} />
+          <Stack.Screen name="NavigationMenu" component={NavigationMenu} />
         </Stack.Navigator>
       </NavigationContainer>
     </ContextProvider>
