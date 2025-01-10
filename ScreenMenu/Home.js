@@ -1,11 +1,10 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import Header from '../components/ui/Header';
+import MainLayout from '../components/layout/MainLayout';
 
 const Home = () => {
   return (
-    <View style={{flex: 1}}>
-      {/* <SafeAreaView style={styles.container}> */}
-      <Header />
+    <MainLayout>
       <View style={styles.content}>
         <TouchableOpacity style={styles.section}>
           <View style={styles.sectionHeader}>
@@ -25,18 +24,17 @@ const Home = () => {
           </Text>
         </TouchableOpacity>
       </View>
-      {/* </SafeAreaView> */}
-    </View>
+    </MainLayout>
   );
 };
 
 export default Home;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
+  // container: {
+  //   flex: 1,
+  //   backgroundColor: '#fff',
+  // },
   settingsIcon: {
     fontSize: 24,
   },
