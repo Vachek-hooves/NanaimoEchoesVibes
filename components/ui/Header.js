@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, TouchableOpacity,Image} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useState, useEffect} from 'react';
 
@@ -51,7 +51,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    paddingTop: 80,
+    paddingTop: 60,
+    zIndex: 1,
   },
   welcomeText: {
     color: 'white',

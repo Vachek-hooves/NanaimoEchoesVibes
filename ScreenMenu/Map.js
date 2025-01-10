@@ -6,11 +6,13 @@ import {NANAIMO_REGION} from '../data/mainLoacation';
 import {useNanaimoContext} from '../store/context';
 import AddSpotModal from '../components/actions/AddSpotModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
 
 const Map = () => {
   const {store, setStore} = useNanaimoContext();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
+  const navigation = useNavigation();
 
   const handleLongPress = event => {
     const coordinates = event.nativeEvent.coordinate;
@@ -33,6 +35,10 @@ const Map = () => {
     }
   };
 
+  const handleMarkerPress = place => {
+    navigation.navigate('SpotDetails', {spot: place});
+  };
+
   return (
     <MainLayout>
       <MapView
@@ -48,7 +54,8 @@ const Map = () => {
             key={place.id}
             coordinate={place.coordinates}
             title={place.header}
-            description={place.text}>
+            description={place.text}
+            onPress={() => handleMarkerPress(place)}>
             <View style={styles.markerContainer}>
               <Image
                 source={{uri: place.image}}
@@ -78,7 +85,8 @@ const styles = StyleSheet.create({
   },
   map: {
     width: Dimensions.get('window').width,
-    height: Dimensions.get('screen').height+100,
+    height: Dimensions.get('screen').height,
+    top: -40,
   },
   markerContainer: {
     width: 70,
