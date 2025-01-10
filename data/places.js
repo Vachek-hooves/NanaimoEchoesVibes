@@ -3,7 +3,7 @@ export const PLACES = [
     id: '1',
     text: 'A beautiful marine park accessible by ferry, known for its hiking trails, beaches, and Indigenous cultural significance.',
     header: 'Newcastle Island',
-    coordinates: {latitude: 49.30692403386, longitude: -123.9318915096091},
+    coordinates: {latitude: 49.18829, longitude: -123.92906},
     image:'https://britishcolumbia.com/wp-content/uploads/2024/06/12e47e87-b7ab-4d08-b8a2-e53d1946eb27.jpeg'
    
   },
