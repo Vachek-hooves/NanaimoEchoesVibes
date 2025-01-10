@@ -10,78 +10,71 @@ import {
   Dimensions,
   Alert,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
-import { useNanaimoContext } from '../store/context';
+import {useNavigation} from '@react-navigation/native';
+import MapView, {Marker, PROVIDER_DEFAULT} from 'react-native-maps';
+import {useNanaimoContext} from '../store/context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const SpotDetails = ({ route }) => {
-  const { spot } = route.params;
+const SpotDetails = ({route}) => {
+  const {spot} = route.params;
   const navigation = useNavigation();
-  const { store, setStore, updateFavoriteSpots } = useNanaimoContext();
+  const {store, setStore, updateFavoriteSpots} = useNanaimoContext();
 
   const handleDelete = () => {
-    Alert.alert(
-      "Delete Spot",
-      "Are you sure you want to delete this spot?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel"
-        },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              const updatedPlaces = store.places.filter(place => place.id !== spot.id);
-              await AsyncStorage.setItem('places', JSON.stringify(updatedPlaces));
-              setStore(prev => ({
-                ...prev,
-                places: updatedPlaces
-              }));
-              navigation.goBack();
-            } catch (error) {
-              console.error('Error deleting spot:', error);
-            }
+    Alert.alert('Delete Spot', 'Are you sure you want to delete this spot?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            const updatedPlaces = store.places.filter(
+              place => place.id !== spot.id,
+            );
+            await AsyncStorage.setItem('places', JSON.stringify(updatedPlaces));
+            setStore(prev => ({
+              ...prev,
+              places: updatedPlaces,
+            }));
+            navigation.goBack();
+          } catch (error) {
+            console.error('Error deleting spot:', error);
           }
-        }
-      ]
-    );
+        },
+      },
+    ]);
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView>
-        <Image source={{ uri: spot.image }} style={styles.image} />
-        
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={() => navigation.goBack()}
-        >
+        <Image source={{uri: spot.image}} style={styles.image} />
+
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}>
           <Text style={styles.backButtonText}>←</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity 
-          style={styles.favoriteButton} 
-          onPress={() => updateFavoriteSpots(spot.id)}
-        >
+        <TouchableOpacity
+          style={styles.favoriteButton}
+          onPress={() => updateFavoriteSpots(spot.id)}>
           <Text style={styles.favoriteButtonText}>
             {(store.favoriteSpots || []).includes(spot.id) ? '❤️' : '🤍'}
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity 
-          style={styles.deleteButton} 
-          onPress={handleDelete}
-        >
+        <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
           <Text style={styles.deleteButtonText}>🗑️</Text>
         </TouchableOpacity>
 
         <View style={styles.content}>
           <Text style={styles.header}>{spot.header}</Text>
           <Text style={styles.description}>{spot.text}</Text>
-          
+
           <View style={styles.coordinatesContainer}>
             <Text style={styles.coordinatesLabel}>Location:</Text>
             <Text style={styles.coordinates}>
@@ -102,14 +95,11 @@ const SpotDetails = ({ route }) => {
               }}
               scrollEnabled={false}
               zoomEnabled={false}
-              rotateEnabled={false}
-            >
-              <Marker
-                coordinate={spot.coordinates}
-              >
+              rotateEnabled={false}>
+              <Marker coordinate={spot.coordinates}>
                 <View style={styles.markerContainer}>
-                  <Image 
-                    source={{ uri: spot.image }} 
+                  <Image
+                    source={{uri: spot.image}}
                     style={styles.markerImage}
                   />
                 </View>
@@ -118,18 +108,22 @@ const SpotDetails = ({ route }) => {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
 export default SpotDetails;
 
-const { width } = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    borderWidth: 5,
+    borderColor: 'red',
+    borderRadius: 50,
+    overflow: 'hidden',
   },
   image: {
     width: width,

@@ -1,10 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { PREDICTIONS } from '../data/predictions';
 import MainLayout from '../components/layout/MainLayout';
 import { useNanaimoContext } from '../store/context';
 
 const Home = () => {
+  const navigation = useNavigation();
   const { store } = useNanaimoContext();
   
   // Get favorite predictions
@@ -16,6 +18,10 @@ const Home = () => {
   const favoriteSpots = store.places.filter(place => 
     store.favoriteSpots?.includes(place.id) || false
   );
+
+  const handleSpotPress = (spot) => {
+    navigation.navigate('SpotDetails', { spot });
+  };
 
   return (
     <MainLayout>
@@ -30,7 +36,11 @@ const Home = () => {
           {favoriteSpots.length > 0 ? (
             <View style={styles.spotsContainer}>
               {favoriteSpots.map((spot) => (
-                <View key={spot.id} style={styles.spotCard}>
+                <TouchableOpacity 
+                  key={spot.id} 
+                  style={styles.spotCard}
+                  onPress={() => handleSpotPress(spot)}
+                >
                   <Image source={{ uri: spot.image }} style={styles.spotImage} />
                   <View style={styles.spotContent}>
                     <Text style={styles.spotTitle}>{spot.header}</Text>
@@ -39,7 +49,7 @@ const Home = () => {
                     </Text>
                   </View>
                   <Text style={styles.favoriteIcon}>❤️</Text>
-                </View>
+                </TouchableOpacity>
               ))}
             </View>
           ) : (
