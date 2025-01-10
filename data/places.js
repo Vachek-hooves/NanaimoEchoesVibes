@@ -19,7 +19,7 @@ export const PLACES = [
     text: 'This scenic coastal park is ideal for bird watching, picnics, and sunset views. It features tidal pools and rugged coastal landscapes.',
     header: 'Pipers Lagoon Park',
     coordinates: {latitude: 49.223020515039565, longitude: -123.94767714308583},
-    image:'https://discovervancouverisland.com/wp-content/uploads/2015/08/Pipers1-TimHartman.jpg'
+    image:'https://fennellsrv.com/wp-content/uploads/2023/09/5b8f05e7-cb41-4025-87ec-fedd1ae7f26e-768x768.jpg'
   },
   {
     id: '4',
