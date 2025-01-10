@@ -72,10 +72,12 @@ const Map = ({navigation}) => {
         .join(';');
 
       const response = await fetch(
-        `https://api.mapbox.com/directions/v5/mapbox/walking/${coordinates}?geometries=geojson&access_token=${MAP_TOKEN}`,
+        `https://api.mapbox.com/directions/v5/mapbox/walking/${points[0].longitude},${points[0].latitude};${points[1].longitude},${points[1].latitude}?access_token=${MAP_TOKEN}&geometries=geojson`,
+        // `https://api.mapbox.com/directions/v5/mapbox/walking/${coordinates}?geometries=geojson&access_token=${MAP_TOKEN}`,
       );
 
       const data = await response.json();
+
       if (data.routes && data.routes[0]) {
         setRoutePath(
           data.routes[0].geometry.coordinates.map(coord => ({
@@ -184,7 +186,14 @@ const Map = ({navigation}) => {
           />
         ))}
 
-        {routePath && (
+        {/* {routePath && (
+          <Polyline
+            coordinates={routePath}
+            strokeColor="#DC143C"
+            strokeWidth={3}
+          />
+        )} */}
+        {isRouteReady && (
           <Polyline
             coordinates={routePath}
             strokeColor="#DC143C"
