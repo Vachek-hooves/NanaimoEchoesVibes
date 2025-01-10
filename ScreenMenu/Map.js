@@ -1,12 +1,38 @@
+import React, { useState } from 'react';
 import {StyleSheet, View, Dimensions, Image} from 'react-native';
 import MapView, {PROVIDER_DEFAULT, Marker} from 'react-native-maps';
 import MainLayout from '../components/layout/MainLayout';
 import {NANAIMO_REGION} from '../data/mainLoacation';
 import { useNanaimoContext } from '../store/context';
+import AddSpotModal from '../components/actions/AddSpotModal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Map = () => {
-  const { store } = useNanaimoContext();
+  const { store, setStore } = useNanaimoContext();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+
+  const handleLongPress = (event) => {
+    const coordinates = event.nativeEvent.coordinate;
+    setSelectedLocation(coordinates);
+    setModalVisible(true);
+  };
+
+  const handleSaveSpot = async (newSpot) => {
+    console.log('newSpot', newSpot);
+    try {
+      const updatedPlaces = [...store.places, newSpot];
+      await AsyncStorage.setItem('places', JSON.stringify(updatedPlaces));
+      setStore(prev => ({
+        ...prev,
+        places: updatedPlaces
+      }));
+      setModalVisible(false);
+    } catch (error) {
+      console.error('Error saving new spot:', error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -17,6 +43,7 @@ const Map = () => {
         showsUserLocation={true}
         showsMyLocationButton={true}
         showsCompass={true}
+        onLongPress={handleLongPress}
       >
         {store.places.map((place) => (
           <Marker
@@ -35,6 +62,13 @@ const Map = () => {
           </Marker>
         ))}
       </MapView>
+
+      <AddSpotModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSave={handleSaveSpot}
+        coordinates={selectedLocation}
+      />
     </View>
   );
 };
