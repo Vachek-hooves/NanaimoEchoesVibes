@@ -11,11 +11,19 @@ import {
 } from 'react-native';
 import {useNanaimoContext} from '../store/context';
 import MainLayout from '../components/layout/MainLayout';
+import CollectionItemModal from '../components/actions/CollectionItemModal';
 
 const Collection = () => {
   const {store} = useNanaimoContext();
   const [activeTab, setActiveTab] = useState('City Facts');
   const {userData} = store;
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleItemPress = item => {
+    setSelectedItem(item);
+    setModalVisible(true);
+  };
 
   const handleShare = async item => {
     try {
@@ -28,21 +36,23 @@ const Collection = () => {
   };
 
   const renderItem = item => (
-    <View key={item.id} style={styles.itemCard}>
+    <TouchableOpacity
+      key={item.id}
+      style={styles.itemCard}
+      onPress={() => handleItemPress(item)}>
       <View style={styles.itemContent}>
         <Text style={styles.itemTitle}>{item.header}</Text>
         <Text style={styles.itemDescription}>{item.text}</Text>
       </View>
       <TouchableOpacity
         style={styles.shareButton}
-        onPress={() => handleShare(item)}>
-        {/* <Text style={styles.shareIcon}>➔</Text> */}
-        <Image
-          source={require('../assets/image/icons/share.png')}
-          style={{width: 30, height: 30}}
-        />
+        onPress={e => {
+          e.stopPropagation();
+          handleShare(item);
+        }}>
+        <Text style={styles.shareIcon}>➔</Text>
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -83,6 +93,11 @@ const Collection = () => {
             : store.places.map(place => renderItem(place))}
         </ScrollView>
       </View>
+      <CollectionItemModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        item={selectedItem}
+      />
     </MainLayout>
   );
 };
@@ -152,7 +167,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.6,
     shadowRadius: 3,
     elevation: 3,
-    marginHorizontal:5
+    marginHorizontal: 5,
   },
   itemContent: {
     flex: 1,
