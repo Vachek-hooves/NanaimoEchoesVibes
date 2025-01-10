@@ -1,0 +1,17 @@
+export const PREDICTIONS = [
+  {id: '1', text: 'Small steps today will lead to great adventures tomorrow.'},
+  {id: '2', text: "A moment of joy is waiting for you – embrace it.Let the waves of change guide you to new horizons."},
+  {id: '3', text: 'Kindness you share today will return in unexpected ways.'},
+  {id: '4', text: 'Let go of what no longer serves you – new growth is coming'},
+  {id: '5', text: 'A familiar path may lead to an unexpected discovery.'},
+  {id: '6', text: 'Trust the quiet moments – they hold the deepest wisdom.'},
+  {id: '7', text: 'An opportunity will appear when you least expect it'},
+  {id: '8', text: 'A peaceful mind will unlock the door to clarity.'},
+  {id: '9', text: 'The beauty you seek is already around you.'},
+  {id: '10', text: 'Unlock new potential by stepping out of your comfort zone.'},
+  {id: '11', text: 'A smile shared today will ripple far beyond what you see.'},
+  {id: '12', text: 'The sunrise tomorrow will bring new beginnings.'},
+  {id: '13', text: 'Courage will open doors you thought were closed.'},
+  {id: '14', text: 'Trust your instincts – they are your inner compass'},
+  {id: '15', text: 'Celebrate small victories – they build great success.'},
+];
