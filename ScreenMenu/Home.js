@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { PREDICTIONS } from '../data/predictions';
 import MainLayout from '../components/layout/MainLayout';
 import { useNanaimoContext } from '../store/context';
@@ -7,20 +7,46 @@ import { useNanaimoContext } from '../store/context';
 const Home = () => {
   const { store } = useNanaimoContext();
   
-  // Safely access favoritePredictions with fallback to empty array
+  // Get favorite predictions
   const favoritePredictions = PREDICTIONS.filter(pred => 
     store.favoritePredictions?.includes(pred.id) || false
+  );
+
+  // Get favorite spots
+  const favoriteSpots = store.places.filter(place => 
+    store.favoriteSpots?.includes(place.id) || false
   );
 
   return (
     <MainLayout>
       <ScrollView style={styles.content}>
-        <TouchableOpacity style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionIcon}>📍</Text>
             <Text style={styles.sectionTitle}>Your Favorite Places</Text>
           </View>
           <Text style={styles.sectionSubtext}>Tap to revisit collection</Text>
+        <TouchableOpacity style={styles.section}>
+
+          {favoriteSpots.length > 0 ? (
+            <View style={styles.spotsContainer}>
+              {favoriteSpots.map((spot) => (
+                <View key={spot.id} style={styles.spotCard}>
+                  <Image source={{ uri: spot.image }} style={styles.spotImage} />
+                  <View style={styles.spotContent}>
+                    <Text style={styles.spotTitle}>{spot.header}</Text>
+                    <Text style={styles.spotDescription} numberOfLines={2}>
+                      {spot.text}
+                    </Text>
+                  </View>
+                  <Text style={styles.favoriteIcon}>❤️</Text>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>No favorite places yet</Text>
+            </View>
+          )}
         </TouchableOpacity>
 
         <View style={styles.section}>
@@ -121,5 +147,44 @@ const styles = StyleSheet.create({
   emptyText: {
     color: '#666',
     fontSize: 14,
+  },
+  spotsContainer: {
+    marginLeft: 32,
+    gap: 12,
+  },
+  spotCard: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  spotImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    marginRight: 12,
+  },
+  spotContent: {
+    flex: 1,
+  },
+  spotTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000',
+    marginBottom: 4,
+  },
+  spotDescription: {
+    fontSize: 14,
+    color: '#666',
+    lineHeight: 20,
   },
 });

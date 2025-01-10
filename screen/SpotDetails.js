@@ -18,7 +18,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const SpotDetails = ({ route }) => {
   const { spot } = route.params;
   const navigation = useNavigation();
-  const { store, setStore } = useNanaimoContext();
+  const { store, setStore, updateFavoriteSpots } = useNanaimoContext();
 
   const handleDelete = () => {
     Alert.alert(
@@ -60,6 +60,15 @@ const SpotDetails = ({ route }) => {
           onPress={() => navigation.goBack()}
         >
           <Text style={styles.backButtonText}>←</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={styles.favoriteButton} 
+          onPress={() => updateFavoriteSpots(spot.id)}
+        >
+          <Text style={styles.favoriteButtonText}>
+            {(store.favoriteSpots || []).includes(spot.id) ? '❤️' : '🤍'}
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
@@ -224,5 +233,26 @@ const styles = StyleSheet.create({
   markerImage: {
     width: '100%',
     height: '100%',
+  },
+  favoriteButton: {
+    position: 'absolute',
+    top: 50,
+    right: 70,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  favoriteButtonText: {
+    fontSize: 20,
   },
 });

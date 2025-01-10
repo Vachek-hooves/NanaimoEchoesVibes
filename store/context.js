@@ -10,6 +10,7 @@ export const ContextProvider = ({ children }) => {
     places: [],
     facts: [],
     favoritePredictions: [],
+    favoriteSpots: [],
     userData: null,
   });
 
@@ -108,12 +109,31 @@ export const ContextProvider = ({ children }) => {
     }
   };
 
+  const updateFavoriteSpots = async (spotId) => {
+    try {
+      const currentFavorites = store.favoriteSpots || [];
+      const newFavorites = currentFavorites.includes(spotId)
+        ? currentFavorites.filter(id => id !== spotId)
+        : [...currentFavorites, spotId];
+      
+      await AsyncStorage.setItem('favoriteSpots', JSON.stringify(newFavorites));
+      
+      setStore(prev => ({
+        ...prev,
+        favoriteSpots: newFavorites
+      }));
+    } catch (error) {
+      console.error('Error updating favorite spots:', error);
+    }
+  };
+
   const contextValue = {
     store,
     setStore,
     updateFavorites,
     updateUserData,
     updateFavoritePredictions,
+    updateFavoriteSpots,
   };
 
   return (
