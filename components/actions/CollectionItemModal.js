@@ -10,6 +10,7 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
+import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
 
 const CollectionItemModal = ({ visible, onClose, item }) => {
   const handleShare = async () => {
@@ -23,6 +24,8 @@ const CollectionItemModal = ({ visible, onClose, item }) => {
   };
 
   if (!item) return null;
+
+  const isPlace = !!item.coordinates;
 
   return (
     <Modal
@@ -52,16 +55,43 @@ const CollectionItemModal = ({ visible, onClose, item }) => {
             <View style={styles.contentContainer}>
               <Text style={styles.title}>{item.header}</Text>
               <Text style={styles.description}>{item.text}</Text>
+              {isPlace && (
+                <>
+                  <View style={styles.coordinatesContainer}>
+                    <Text style={styles.coordinatesLabel}>Location:</Text>
+                    <Text style={styles.coordinates}>
+                      {item.coordinates.latitude.toFixed(6)}°N, {'\n'}
+                      {item.coordinates.longitude.toFixed(6)}°W
+                    </Text>
+                  </View>
 
-              {item.coordinates && (
-                <View style={styles.coordinatesContainer}>
-                  <Text style={styles.coordinatesLabel}>Location:</Text>
-                  <Text style={styles.coordinates}>
-                    {item.coordinates.latitude.toFixed(6)}°N, {'\n'}
-                    {item.coordinates.longitude.toFixed(6)}°W
-                  </Text>
-                </View>
+                  <View style={styles.mapContainer}>
+                    <MapView
+                      style={styles.map}
+                      provider={PROVIDER_DEFAULT}
+                      initialRegion={{
+                        latitude: item.coordinates.latitude,
+                        longitude: item.coordinates.longitude,
+                        latitudeDelta: 0.005,
+                        longitudeDelta: 0.005,
+                      }}
+                      scrollEnabled={false}
+                      zoomEnabled={false}
+                      rotateEnabled={false}
+                    >
+                      <Marker coordinate={item.coordinates}>
+                        <View style={styles.markerContainer}>
+                          <Image 
+                            source={{ uri: item.image }} 
+                            style={styles.markerImage}
+                          />
+                        </View>
+                      </Marker>
+                    </MapView>
+                  </View>
+                </>
               )}
+
 
               <TouchableOpacity 
                 style={styles.shareButton}
@@ -69,6 +99,7 @@ const CollectionItemModal = ({ visible, onClose, item }) => {
               >
                 <Text style={styles.shareButtonText}>Share</Text>
               </TouchableOpacity>
+              <View style={{height: 60}}></View>
             </View>
           </ScrollView>
         </View>
@@ -154,6 +185,30 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  mapContainer: {
+    marginBottom: 20,
+    borderRadius: 12,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  map: {
+    width: '100%',
+    height: 200,
+  },
+  markerContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    overflow: 'hidden',
+    borderWidth: 2,
+    borderColor: 'white',
+    backgroundColor: 'white',
+  },
+  markerImage: {
+    width: '100%',
+    height: '100%',
   },
 });
 
