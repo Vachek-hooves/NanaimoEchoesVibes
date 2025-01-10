@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PLACES } from '../data/places';
 import { FACTS } from '../data/facts';
@@ -9,7 +9,7 @@ export const ContextProvider = ({ children }) => {
   const [store, setStore] = useState({
     places: [],
     facts: [],
-    favorites: [],
+    favoritePredictions: [],
     userData: null,
   });
 
@@ -90,11 +90,30 @@ export const ContextProvider = ({ children }) => {
     }
   };
 
+  const updateFavoritePredictions = async (predictionId) => {
+    try {
+      const currentFavorites = store.favoritePredictions || [];
+      const newFavorites = currentFavorites.includes(predictionId)
+        ? currentFavorites.filter(id => id !== predictionId)
+        : [...currentFavorites, predictionId];
+      
+      await AsyncStorage.setItem('favoritePredictions', JSON.stringify(newFavorites));
+      
+      setStore(prev => ({
+        ...prev,
+        favoritePredictions: newFavorites
+      }));
+    } catch (error) {
+      console.error('Error updating favorites:', error);
+    }
+  };
+
   const contextValue = {
     store,
     setStore,
     updateFavorites,
-    updateUserData
+    updateUserData,
+    updateFavoritePredictions,
   };
 
   return (

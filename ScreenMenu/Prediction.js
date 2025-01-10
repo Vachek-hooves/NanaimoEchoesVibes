@@ -16,7 +16,7 @@ import {PREDICTIONS} from '../data/predictions';
 import MainLayout from '../components/layout/MainLayout';
 
 const Prediction = () => {
-  const {store} = useNanaimoContext();
+  const {store, updateFavoritePredictions} = useNanaimoContext();
   const [prediction, setPrediction] = useState(null);
   const [recentPredictions, setRecentPredictions] = useState([]);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -131,22 +131,6 @@ const Prediction = () => {
     }
   };
 
-  const toggleFavorite = async predictionId => {
-    try {
-      const newFavorites = favoritePredictions.includes(predictionId)
-        ? favoritePredictions.filter(id => id !== predictionId)
-        : [...favoritePredictions, predictionId];
-
-      await AsyncStorage.setItem(
-        'favoritePredictions',
-        JSON.stringify(newFavorites),
-      );
-      setFavoritePredictions(newFavorites);
-    } catch (error) {
-      console.error('Error updating favorites:', error);
-    }
-  };
-
   return (
     <MainLayout>
       <View style={styles.content}>
@@ -169,19 +153,15 @@ const Prediction = () => {
               <View style={styles.actionButtons}>
                 <TouchableOpacity
                   style={styles.actionButton}
-                  onPress={() => toggleFavorite(prediction.id)}>
+                  onPress={() => updateFavoritePredictions(prediction.id)}>
                   <Text style={styles.actionButtonText}>
-                    {favoritePredictions.includes(prediction.id) ? '❤️' : '🤍'}
+                    {(store.favoritePredictions || []).includes(prediction.id) ? '❤️' : '🤍'}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.actionButton}
                   onPress={handleShare}>
-                  {/* <Text style={styles.actionButtonText}>➔</Text> */}
-                  <Image
-                    source={require('../assets/image/icons/share.png')}
-                    style={{width: 30, height: 30}}
-                  />
+                  <Text style={styles.actionButtonText}>➔</Text>
                 </TouchableOpacity>
               </View>
             </>
@@ -199,9 +179,9 @@ const Prediction = () => {
                 <Text style={styles.predictionText}>{item.text}</Text>
                 <TouchableOpacity
                   style={styles.favoriteButton}
-                  onPress={() => toggleFavorite(item.id)}>
+                  onPress={() => updateFavoritePredictions(item.id)}>
                   <Text>
-                    {favoritePredictions.includes(item.id) ? '❤️' : '🤍'}
+                    {(store.favoritePredictions || []).includes(item.id) ? '❤️' : '🤍'}
                   </Text>
                 </TouchableOpacity>
               </View>
