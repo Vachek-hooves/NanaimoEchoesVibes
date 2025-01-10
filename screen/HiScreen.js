@@ -17,7 +17,7 @@ const HiScreen = () => {
     if (currentIndex < WelcomeText.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      navigation.navigate('NavigationMenu');
+      navigation.navigate('Name');
     }
   };
 
