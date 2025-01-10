@@ -50,7 +50,7 @@ const SpotDetails = ({route}) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView contentContainerStyle={{backgroundColor: 'rgba(251, 4, 49, 0.5)'}}>
         <Image source={{uri: spot.image}} style={styles.image} />
 
         <TouchableOpacity
