@@ -6,17 +6,65 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Dimensions,
+  Image,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 const Name = () => {
   const [nickname, setNickname] = useState('');
+  const [userImage, setUserImage] = useState(null);
+  const [isExistingUser, setIsExistingUser] = useState(false);
   const navigation = useNavigation();
 
-  const handleSet = () => {
+  useEffect(() => {
+    checkExistingUser();
+  }, []);
+
+  const checkExistingUser = async () => {
+    try {
+      const userData = await AsyncStorage.getItem('userData');
+      if (userData) {
+        const { name, image } = JSON.parse(userData);
+        setNickname(name);
+        setUserImage(image);
+        setIsExistingUser(true);
+      }
+    } catch (error) {
+      console.error('Error checking user data:', error);
+    }
+  };
+
+  const handleImagePick = async () => {
+    const options = {
+      mediaType: 'photo',
+      quality: 0.7,
+    };
+
+    try {
+      const result = await launchImageLibrary(options);
+      if (result.assets && result.assets[0]) {
+        setUserImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+    }
+  };
+
+  const saveUserData = async () => {
     if (nickname.trim()) {
-      navigation.navigate('NavigationMenu');
+      try {
+        const userData = {
+          name: nickname.trim(),
+          image: userImage,
+        };
+        await AsyncStorage.setItem('userData', JSON.stringify(userData));
+        navigation.navigate('NavigationMenu');
+      } catch (error) {
+        console.error('Error saving user data:', error);
+      }
     }
   };
 
@@ -32,8 +80,20 @@ const Name = () => {
 
       <View style={styles.contentContainer}>
         <Text style={styles.header}>
-          Let the echoes of your journey start with a nickname
+          {isExistingUser 
+            ? 'Welcome back! Update your profile?' 
+            : 'Let the echoes of your journey start with a nickname'}
         </Text>
+
+        <TouchableOpacity style={styles.imageContainer} onPress={handleImagePick}>
+          {userImage ? (
+            <Image source={{ uri: userImage }} style={styles.userImage} />
+          ) : (
+            <View style={styles.imagePlaceholder}>
+              <Text style={styles.imagePlaceholderText}>Add Photo</Text>
+            </View>
+          )}
+        </TouchableOpacity>
         
         <TextInput
           style={styles.input}
@@ -45,10 +105,12 @@ const Name = () => {
 
         <TouchableOpacity 
           style={[styles.setButton, !nickname.trim() && styles.setButtonDisabled]}
-          onPress={handleSet}
+          onPress={saveUserData}
           disabled={!nickname.trim()}
         >
-          <Text style={styles.setButtonText}>Set</Text>
+          <Text style={styles.setButtonText}>
+            {isExistingUser ? 'Update' : 'Set'}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -106,5 +168,31 @@ const styles = StyleSheet.create({
     color: '#DC143C',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  imageContainer: {
+    alignSelf: 'center',
+    marginBottom: 20,
+  },
+  userImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 3,
+    borderColor: 'white',
+  },
+  imagePlaceholder: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'white',
+    borderStyle: 'dashed',
+  },
+  imagePlaceholderText: {
+    color: 'white',
+    fontSize: 16,
   },
 });
