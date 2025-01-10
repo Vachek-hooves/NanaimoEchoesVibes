@@ -8,18 +8,66 @@ import {
   Image,
   Animated,
   ScrollView,
+  Share,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNanaimoContext} from '../store/context';
 import {PREDICTIONS} from '../data/predictions';
+import MainLayout from '../components/layout/MainLayout';
 
 const Prediction = () => {
   const {store} = useNanaimoContext();
   const [prediction, setPrediction] = useState(null);
   const [recentPredictions, setRecentPredictions] = useState([]);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [favoritePredictions, setFavoritePredictions] = useState([]);
   const scaleAnim = new Animated.Value(1);
 
-  const handleCookiePress = () => {
+  useEffect(() => {
+    loadPredictionData();
+  }, []);
+
+  const loadPredictionData = async () => {
+    try {
+      const [
+        storedPrediction,
+        storedRecent,
+        storedFavorites,
+        lastPredictionDate,
+      ] = await Promise.all([
+        AsyncStorage.getItem('currentPrediction'),
+        AsyncStorage.getItem('recentPredictions'),
+        AsyncStorage.getItem('favoritePredictions'),
+        AsyncStorage.getItem('lastPredictionDate'),
+      ]);
+
+      const today = new Date().toDateString();
+
+      if (storedPrediction && lastPredictionDate === today) {
+        setPrediction(JSON.parse(storedPrediction));
+      }
+
+      if (storedRecent) {
+        setRecentPredictions(JSON.parse(storedRecent));
+      }
+
+      if (storedFavorites) {
+        setFavoritePredictions(JSON.parse(storedFavorites));
+      }
+    } catch (error) {
+      console.error('Error loading prediction data:', error);
+    }
+  };
+
+  const handleCookiePress = async () => {
+    const today = new Date().toDateString();
+    const lastPredictionDate = await AsyncStorage.getItem('lastPredictionDate');
+
+    if (lastPredictionDate === today) {
+      // Already got prediction today
+      return;
+    }
+
     if (isAnimating) return;
 
     setIsAnimating(true);
@@ -42,29 +90,65 @@ const Prediction = () => {
         duration: 100,
         useNativeDriver: true,
       }),
-    ]).start(() => {
+    ]).start(async () => {
       setPrediction(randomPrediction);
-      setRecentPredictions(prev => [randomPrediction, ...prev].slice(0, 5));
+      const newRecentPredictions = [
+        randomPrediction,
+        ...recentPredictions,
+      ].slice(0, 5);
+
+      try {
+        await Promise.all([
+          AsyncStorage.setItem(
+            'currentPrediction',
+            JSON.stringify(randomPrediction),
+          ),
+          AsyncStorage.setItem(
+            'recentPredictions',
+            JSON.stringify(newRecentPredictions),
+          ),
+          AsyncStorage.setItem('lastPredictionDate', today),
+        ]);
+
+        setRecentPredictions(newRecentPredictions);
+      } catch (error) {
+        console.error('Error saving prediction:', error);
+      }
+
       setIsAnimating(false);
     });
   };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.welcomeText}>
-            Welcome back, {store.userData?.name}!
-          </Text>
-          <Text style={styles.subtitleText}>
-            Your journey through{'\n'}Nanaimo continues...
-          </Text>
-        </View>
-        <TouchableOpacity style={styles.settingsButton}>
-          <Text style={styles.settingsIcon}>⚙️</Text>
-        </TouchableOpacity>
-      </View>
+  const handleShare = async () => {
+    if (prediction) {
+      try {
+        await Share.share({
+          message: prediction.text,
+        });
+      } catch (error) {
+        console.error('Error sharing prediction:', error);
+      }
+    }
+  };
 
+  const toggleFavorite = async predictionId => {
+    try {
+      const newFavorites = favoritePredictions.includes(predictionId)
+        ? favoritePredictions.filter(id => id !== predictionId)
+        : [...favoritePredictions, predictionId];
+
+      await AsyncStorage.setItem(
+        'favoritePredictions',
+        JSON.stringify(newFavorites),
+      );
+      setFavoritePredictions(newFavorites);
+    } catch (error) {
+      console.error('Error updating favorites:', error);
+    }
+  };
+
+  return (
+    <MainLayout>
       <View style={styles.content}>
         <Animated.View
           style={[styles.cookieContainer, {transform: [{scale: scaleAnim}]}]}>
@@ -79,9 +163,32 @@ const Prediction = () => {
               resizeMode="contain"
             />
           </TouchableOpacity>
-          <Text style={styles.cookieText}>
-            {prediction ? prediction.text : 'Tap the Fortune Cookie'}
-          </Text>
+          {prediction && (
+            <>
+              <Text style={styles.cookieText}>{prediction.text}</Text>
+              <View style={styles.actionButtons}>
+                <TouchableOpacity
+                  style={styles.actionButton}
+                  onPress={() => toggleFavorite(prediction.id)}>
+                  <Text style={styles.actionButtonText}>
+                    {favoritePredictions.includes(prediction.id) ? '❤️' : '🤍'}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.actionButton}
+                  onPress={handleShare}>
+                  {/* <Text style={styles.actionButtonText}>➔</Text> */}
+                  <Image
+                    source={require('../assets/image/icons/share.png')}
+                    style={{width: 30, height: 30}}
+                  />
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
+          {!prediction && (
+            <Text style={styles.cookieText}>Tap the Fortune Cookie</Text>
+          )}
         </Animated.View>
 
         <View style={styles.recentContainer}>
@@ -90,12 +197,19 @@ const Prediction = () => {
             {recentPredictions.map((item, index) => (
               <View key={index} style={styles.predictionCard}>
                 <Text style={styles.predictionText}>{item.text}</Text>
+                <TouchableOpacity
+                  style={styles.favoriteButton}
+                  onPress={() => toggleFavorite(item.id)}>
+                  <Text>
+                    {favoritePredictions.includes(item.id) ? '❤️' : '🤍'}
+                  </Text>
+                </TouchableOpacity>
               </View>
             ))}
           </ScrollView>
         </View>
       </View>
-    </SafeAreaView>
+    </MainLayout>
   );
 };
 
@@ -168,6 +282,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   predictionCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: 'white',
     borderRadius: 12,
     padding: 16,
@@ -182,8 +298,36 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   predictionText: {
+    flex: 1,
     fontSize: 14,
     color: '#333',
     lineHeight: 20,
+  },
+  favoriteButton: {
+    marginLeft: 10,
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    marginTop: 15,
+    gap: 20,
+  },
+  actionButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#f5f5f5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  actionButtonText: {
+    fontSize: 20,
   },
 });
