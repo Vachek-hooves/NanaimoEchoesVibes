@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   StyleSheet,
   View,
@@ -19,6 +19,7 @@ const MAP_TOKEN =
   'pk.eyJ1IjoidmFjaGVrbWFwMSIsImEiOiJjbTR3cHdkZXgwN2xxMmtyMHpkM3J1Ymc4In0.MQ2PHgJ_geG0AdbhlelR2Q';
 
 const Map = ({navigation}) => {
+  const mapRef = useRef();
   const {store, setStore} = useNanaimoContext();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
@@ -27,6 +28,8 @@ const Map = ({navigation}) => {
   const [routePath, setRoutePath] = useState(null);
   const [isLocationPermission, setIsLocationPermission] = useState(false);
   const [isRouteReady, setIsRouteReady] = useState(false);
+  console.log(isRouteMode, 'isRouteMode');
+  console.log(isRouteReady);
 
   useEffect(() => {
     const initMap = async () => {
@@ -45,10 +48,13 @@ const Map = ({navigation}) => {
 
   const toggleRouteMode = () => {
     setIsRouteMode(!isRouteMode);
-    if (!isRouteMode) {
-      setRoutePoints([]);
-      setRoutePath(null);
-    }
+    // if (!isRouteMode) {
+    //   setRoutePoints([]);
+    //   setRoutePath(null);
+    // }
+    // setIsRouteMode(!isRouteMode);
+    setRoutePoints([]);
+    setRoutePath(null);
   };
 
   const handleMapPress = async event => {
@@ -142,13 +148,15 @@ const Map = ({navigation}) => {
           routes: updatedRoutes,
         }));
 
-        clearRoute();
+        // clearRoute();
         setIsRouteMode(false);
       } catch (error) {
         console.error('Error saving route:', error);
       }
     }
   };
+
+  
 
   return (
     <MainLayout>
@@ -193,11 +201,12 @@ const Map = ({navigation}) => {
             strokeWidth={3}
           />
         )} */}
-        {isRouteReady && (
+        {isRouteMode && (
           <Polyline
             coordinates={routePath}
             strokeColor="#DC143C"
             strokeWidth={3}
+            lineDashPattern={[1, 7]}
           />
         )}
       </MapView>
@@ -228,15 +237,16 @@ const Map = ({navigation}) => {
               styles.routeButtonText,
               isRouteMode && styles.routeButtonTextActive,
             ]}>
+            {/* {isRouteMode ? 'Cancel Route' : 'Create Route'} */}
             {isRouteMode ? 'Cancel Route' : 'Create Route'}
           </Text>
         </TouchableOpacity>
 
         {isRouteMode && routePoints.length >= 2 && (
           <>
-            <TouchableOpacity style={styles.routeButton} onPress={clearRoute}>
+            {/* <TouchableOpacity style={styles.routeButton} onPress={clearRoute}>
               <Text style={styles.routeButtonText}>Clear</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             {/* <TouchableOpacity
               style={[styles.routeButton, styles.saveButton]}
@@ -248,6 +258,8 @@ const Map = ({navigation}) => {
           </>
         )}
       </View>
+
+      
 
       <AddSpotModal
         visible={modalVisible}
@@ -308,13 +320,17 @@ const styles = StyleSheet.create({
   },
   routeControls: {
     position: 'absolute',
-    bottom: 120,
-    left: 20,
+    bottom: 20,
+    // left: 20,
     right: 20,
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 10,
     zIndex: 999,
+  },
+  userLocation: {
+    position: 'absolute',
+    bottom: 20,
   },
   routeButton: {
     backgroundColor: 'white',
