@@ -179,6 +179,7 @@ const Map = ({navigation}) => {
         showsMyLocationButton={true}
         showsCompass={true}
         onPress={handleMapPress}
+        followsUserLocation={true}
         onLongPress={handleLongPress}>
         {store.places.map(place => (
           <Marker

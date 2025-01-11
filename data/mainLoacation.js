@@ -1,6 +1,6 @@
 export const NANAIMO_REGION = {
-  latitude: 49.2,
+  latitude: 49.18,
   longitude: -123.95,
-  latitudeDelta: 0.1,
-  longitudeDelta: 0.1,
+  latitudeDelta: 0.01,
+  longitudeDelta: 0.01,
 };
