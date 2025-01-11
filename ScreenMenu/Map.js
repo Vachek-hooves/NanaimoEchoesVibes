@@ -16,7 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {checkLacationPermission} from '../Utils/locaiton';
 
 const MAP_TOKEN =
-  'pk.eyJ1IjoidmFjaGVrbWFwMSIsImEiOiJjbTR3cHdkZXgwN2xxMmtyMHpkM3J1Ymc4In0.MQ2PHgJ_geG0AdbhlelR2Q';
+  'pk.eyJ1IjoidmFjaGVrbWFwMSIsImEiOiJjbTVzY21tMHowanRvMmxzZXF6Z3RqdTNvIn0.yqzkqU0FepoNNh_Xqg5Liw';
 
 const Map = ({navigation}) => {
   const mapRef = useRef();
@@ -156,8 +156,6 @@ const Map = ({navigation}) => {
     }
   };
 
-  
-
   return (
     <MainLayout>
       <MapView
@@ -258,8 +256,6 @@ const Map = ({navigation}) => {
           </>
         )}
       </View>
-
-      
 
       <AddSpotModal
         visible={modalVisible}
