@@ -33,7 +33,11 @@
 		<true/>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Your location helps us find you on map and build routes to your selected destinations.</string>	
+	<key>NSCameraUsageDescription</key>
+	<string>App need access to camera to take photos of your profile</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>App need access to photo library to add images to your profile</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

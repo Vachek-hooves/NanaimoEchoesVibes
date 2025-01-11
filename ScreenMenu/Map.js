@@ -14,6 +14,7 @@ import {useNanaimoContext} from '../store/context';
 import AddSpotModal from '../components/actions/AddSpotModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {checkLacationPermission} from '../Utils/locaiton';
+import FindLocation from '../components/actions/FindLocation';
 
 const MAP_TOKEN =
   'pk.eyJ1IjoidmFjaGVrbWFwMSIsImEiOiJjbTVzY21tMHowanRvMmxzZXF6Z3RqdTNvIn0.yqzkqU0FepoNNh_Xqg5Liw';
@@ -97,10 +98,10 @@ const Map = ({navigation}) => {
     }
   };
 
-  const clearRoute = () => {
-    setRoutePoints([]);
-    setRoutePath(null);
-  };
+  // const clearRoute = () => {
+  //   setRoutePoints([]);
+  //   setRoutePath(null);
+  // };
 
   const handleLongPress = event => {
     if (!isRouteMode) {
@@ -129,36 +130,48 @@ const Map = ({navigation}) => {
     navigation.navigate('SpotDetails', {spot: place});
   };
 
-  const saveRoute = async () => {
-    if (routePath && routePath.length > 0) {
-      try {
-        const newRoute = {
-          id: Date.now().toString(),
-          path: routePath,
-          points: routePoints,
-        };
+  // const saveRoute = async () => {
+  //   if (routePath && routePath.length > 0) {
+  //     try {
+  //       const newRoute = {
+  //         id: Date.now().toString(),
+  //         path: routePath,
+  //         points: routePoints,
+  //       };
 
-        const existingRoutes =
-          JSON.parse(await AsyncStorage.getItem('routes')) || [];
-        const updatedRoutes = [...existingRoutes, newRoute];
+  //       const existingRoutes =
+  //         JSON.parse(await AsyncStorage.getItem('routes')) || [];
+  //       const updatedRoutes = [...existingRoutes, newRoute];
 
-        await AsyncStorage.setItem('routes', JSON.stringify(updatedRoutes));
-        setStore(prev => ({
-          ...prev,
-          routes: updatedRoutes,
-        }));
+  //       await AsyncStorage.setItem('routes', JSON.stringify(updatedRoutes));
+  //       setStore(prev => ({
+  //         ...prev,
+  //         routes: updatedRoutes,
+  //       }));
 
-        // clearRoute();
-        setIsRouteMode(false);
-      } catch (error) {
-        console.error('Error saving route:', error);
+  //       // clearRoute();
+  //       setIsRouteMode(false);
+  //     } catch (error) {
+  //       console.error('Error saving route:', error);
+  //     }
+  //   }
+  // };
+
+  const goToMyLocation = async () => {
+    try {
+      const permissionOk = await checkLacationPermission();
+      if (permissionOk) {
+        mapRef.current.animateToRegion(NANAIMO_REGION, 1000); // 1000ms animation duration
       }
+    } catch (error) {
+      console.error('Error going to location:', error);
     }
   };
 
   return (
     <MainLayout>
       <MapView
+        ref={mapRef}
         style={styles.map}
         provider={PROVIDER_DEFAULT}
         initialRegion={NANAIMO_REGION}
@@ -256,6 +269,10 @@ const Map = ({navigation}) => {
           </>
         )}
       </View>
+
+      <FindLocation onPress={goToMyLocation} />
+
+
 
       <AddSpotModal
         visible={modalVisible}
@@ -361,4 +378,5 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: 'white',
   },
+ 
 });
