@@ -15,6 +15,7 @@ import AddSpotModal from '../components/actions/AddSpotModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {checkLacationPermission} from '../Utils/locaiton';
 import FindLocation from '../components/actions/FindLocation';
+import UserRouteDetails from '../components/actions/UserRouteDetails';
 
 const MAP_TOKEN =
   'pk.eyJ1IjoidmFjaGVrbWFwMSIsImEiOiJjbTVzY21tMHowanRvMmxzZXF6Z3RqdTNvIn0.yqzkqU0FepoNNh_Xqg5Liw';
@@ -30,6 +31,7 @@ const Map = ({navigation}) => {
   const [isLocationPermission, setIsLocationPermission] = useState(false);
   const [isRouteReady, setIsRouteReady] = useState(false);
   const [routeStage, setRouteStage] = useState(''); // 'A', 'B', or ''
+  const [routeDetails, setRouteDetails] = useState(null);
   console.log(isRouteMode, 'isRouteMode');
   console.log(isRouteReady);
 
@@ -87,6 +89,7 @@ const Map = ({navigation}) => {
       const data = await response.json();
 
       if (data.routes && data.routes[0]) {
+        console.log(data.routes[0]);
         setRoutePath(
           data.routes[0].geometry.coordinates.map(coord => ({
             latitude: coord[1],
@@ -94,16 +97,17 @@ const Map = ({navigation}) => {
           })),
         );
       }
+      setRouteDetails(data.routes[0]);
     } catch (error) {
       console.error('Error fetching route:', error);
     }
   };
 
-  const clearRoute = () => {
-    setRoutePoints([]);
-    setRoutePath(null);
-    setRouteStage('A');
-  };
+  // const clearRoute = () => {
+  //   setRoutePoints([]);
+  //   setRoutePath(null);
+  //   setRouteStage('A');
+  // };
 
   const handleLongPress = event => {
     if (!isRouteMode) {
@@ -132,32 +136,32 @@ const Map = ({navigation}) => {
     navigation.navigate('SpotDetails', {spot: place});
   };
 
-  const saveRoute = async () => {
-    if (routePath && routePath.length > 0) {
-      try {
-        const newRoute = {
-          id: Date.now().toString(),
-          path: routePath,
-          points: routePoints,
-        };
+  // const saveRoute = async () => {
+  //   if (routePath && routePath.length > 0) {
+  //     try {
+  //       const newRoute = {
+  //         id: Date.now().toString(),
+  //         path: routePath,
+  //         points: routePoints,
+  //       };
 
-        const existingRoutes =
-          JSON.parse(await AsyncStorage.getItem('routes')) || [];
-        const updatedRoutes = [...existingRoutes, newRoute];
+  //       const existingRoutes =
+  //         JSON.parse(await AsyncStorage.getItem('routes')) || [];
+  //       const updatedRoutes = [...existingRoutes, newRoute];
 
-        await AsyncStorage.setItem('routes', JSON.stringify(updatedRoutes));
-        setStore(prev => ({
-          ...prev,
-          routes: updatedRoutes,
-        }));
+  //       await AsyncStorage.setItem('routes', JSON.stringify(updatedRoutes));
+  //       setStore(prev => ({
+  //         ...prev,
+  //         routes: updatedRoutes,
+  //       }));
 
-        // clearRoute();
-        setIsRouteMode(false);
-      } catch (error) {
-        console.error('Error saving route:', error);
-      }
-    }
-  };
+  //       // clearRoute();
+  //       setIsRouteMode(false);
+  //     } catch (error) {
+  //       console.error('Error saving route:', error);
+  //     }
+  //   }
+  // };
 
   const goToMyLocation = async () => {
     try {
@@ -240,8 +244,9 @@ const Map = ({navigation}) => {
           <Text style={styles.instructionText}>
             {routeStage === 'A' && 'Tap to select starting point (A)'}
             {routeStage === 'B' && 'Tap to select destination point (B)'}
-            {routeStage === 'complete' &&
-              'Route created! Save or clear to start over'}
+            {routeStage === 'complete' && (
+              <UserRouteDetails routeDetails={routeDetails} />
+            )}
           </Text>
         </View>
       )}
@@ -279,8 +284,6 @@ const Map = ({navigation}) => {
       </View>
 
       <FindLocation onPress={goToMyLocation} />
-
-
 
       <AddSpotModal
         visible={modalVisible}

@@ -155,13 +155,19 @@ const Prediction = () => {
                   style={styles.actionButton}
                   onPress={() => updateFavoritePredictions(prediction.id)}>
                   <Text style={styles.actionButtonText}>
-                    {(store.favoritePredictions || []).includes(prediction.id) ? '❤️' : '🤍'}
+                    {(store.favoritePredictions || []).includes(prediction.id)
+                      ? '❤️'
+                      : '🤍'}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.actionButton}
                   onPress={handleShare}>
-                  <Text style={styles.actionButtonText}>➔</Text>
+                  {/* <Text style={styles.actionButtonText}>➔</Text> */}
+                  <Image
+                    source={require('../assets/image/icons/share.png')}
+                    style={{width: 35, height: 35}}
+                  />
                 </TouchableOpacity>
               </View>
             </>
@@ -181,7 +187,9 @@ const Prediction = () => {
                   style={styles.favoriteButton}
                   onPress={() => updateFavoritePredictions(item.id)}>
                   <Text>
-                    {(store.favoritePredictions || []).includes(item.id) ? '❤️' : '🤍'}
+                    {(store.favoritePredictions || []).includes(item.id)
+                      ? '❤️'
+                      : '🤍'}
                   </Text>
                 </TouchableOpacity>
               </View>
