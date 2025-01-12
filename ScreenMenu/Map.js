@@ -244,10 +244,10 @@ const Map = ({navigation}) => {
           <Text style={styles.instructionText}>
             {routeStage === 'A' && 'Tap to select starting point (A)'}
             {routeStage === 'B' && 'Tap to select destination point (B)'}
-            {routeStage === 'complete' && (
-              <UserRouteDetails routeDetails={routeDetails} />
-            )}
           </Text>
+          {routeStage === 'complete' && (
+            <UserRouteDetails routeDetails={routeDetails} />
+          )}
         </View>
       )}
 
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
     left: 20,
     right: 20,
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    padding: 10,
+    padding: 6,
     borderRadius: 8,
     alignItems: 'center',
   },

@@ -1,11 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
 
-const UserRouteDetails = ({ routeDetails }) => {
+const UserRouteDetails = ({routeDetails}) => {
   if (!routeDetails) return null;
 
   // Convert distance to km if > 1000m, otherwise show in meters
-  const formatDistance = (meters) => {
+  const formatDistance = meters => {
     if (meters >= 1000) {
       return `${(meters / 1000).toFixed(1)} km`;
     }
@@ -13,7 +13,7 @@ const UserRouteDetails = ({ routeDetails }) => {
   };
 
   // Convert duration from seconds to minutes
-  const formatDuration = (seconds) => {
+  const formatDuration = seconds => {
     const minutes = Math.round(seconds / 60);
     return `${minutes} min`;
   };
@@ -23,12 +23,16 @@ const UserRouteDetails = ({ routeDetails }) => {
       <View style={styles.detailRow}>
         <View style={styles.detailItem}>
           <Text style={styles.label}>Distance</Text>
-          <Text style={styles.value}>{formatDistance(routeDetails.distance)}</Text>
+          <Text style={styles.value}>
+            {formatDistance(routeDetails.distance)}
+          </Text>
         </View>
         <View style={styles.separator} />
         <View style={styles.detailItem}>
           <Text style={styles.label}>Duration</Text>
-          <Text style={styles.value}>{formatDuration(routeDetails.duration)}</Text>
+          <Text style={styles.value}>
+            {formatDuration(routeDetails.duration)}
+          </Text>
         </View>
       </View>
       {routeDetails.legs?.[0]?.summary && (
@@ -44,6 +48,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 10,
     marginTop: 8,
+    minWidth: 180,
   },
   detailRow: {
     flexDirection: 'row',

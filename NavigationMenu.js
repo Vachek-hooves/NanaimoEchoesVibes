@@ -87,7 +87,7 @@ const NavigationMenu = () => {
 
 const styles = StyleSheet.create({
   tabBar: {
-    height: 80,
+    height: 90,
     backgroundColor: '#F6F7FB',
     borderTopWidth: 0,
     elevation: 0,
@@ -96,12 +96,12 @@ const styles = StyleSheet.create({
     paddingBottom: 25,
   },
   tabIcon: {
-    width: 24,
-    height: 24,
+    width: 34,
+    height: 34,
   },
   tabLabel: {
     fontSize: 12,
-    marginTop: 2,
+    marginTop: 5,
   },
 });
 
