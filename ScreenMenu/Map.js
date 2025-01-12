@@ -29,6 +29,7 @@ const Map = ({navigation}) => {
   const [routePath, setRoutePath] = useState(null);
   const [isLocationPermission, setIsLocationPermission] = useState(false);
   const [isRouteReady, setIsRouteReady] = useState(false);
+  const [routeStage, setRouteStage] = useState(''); // 'A', 'B', or ''
   console.log(isRouteMode, 'isRouteMode');
   console.log(isRouteReady);
 
@@ -44,29 +45,29 @@ const Map = ({navigation}) => {
   useEffect(() => {
     if (routePath?.length > 0) {
       setIsRouteReady(true);
+      setIsLocationPermission(true);
     }
   }, [routePath]);
 
   const toggleRouteMode = () => {
     setIsRouteMode(!isRouteMode);
-    // if (!isRouteMode) {
-    //   setRoutePoints([]);
-    //   setRoutePath(null);
-    // }
-    // setIsRouteMode(!isRouteMode);
     setRoutePoints([]);
     setRoutePath(null);
+    setRouteStage(isRouteMode ? '' : 'A'); // Set to 'A' when starting route mode
   };
 
   const handleMapPress = async event => {
     const coordinates = event.nativeEvent.coordinate;
 
     if (isRouteMode) {
-      const newPoints = [...routePoints, coordinates];
-      setRoutePoints(newPoints);
-
-      if (newPoints.length >= 2) {
+      if (routeStage === 'A') {
+        setRoutePoints([coordinates]);
+        setRouteStage('B');
+      } else if (routeStage === 'B') {
+        const newPoints = [...routePoints, coordinates];
+        setRoutePoints(newPoints);
         await fetchRoutePath(newPoints);
+        setRouteStage('complete');
       }
     }
   };
@@ -98,10 +99,11 @@ const Map = ({navigation}) => {
     }
   };
 
-  // const clearRoute = () => {
-  //   setRoutePoints([]);
-  //   setRoutePath(null);
-  // };
+  const clearRoute = () => {
+    setRoutePoints([]);
+    setRoutePath(null);
+    setRouteStage('A');
+  };
 
   const handleLongPress = event => {
     if (!isRouteMode) {
@@ -130,32 +132,32 @@ const Map = ({navigation}) => {
     navigation.navigate('SpotDetails', {spot: place});
   };
 
-  // const saveRoute = async () => {
-  //   if (routePath && routePath.length > 0) {
-  //     try {
-  //       const newRoute = {
-  //         id: Date.now().toString(),
-  //         path: routePath,
-  //         points: routePoints,
-  //       };
+  const saveRoute = async () => {
+    if (routePath && routePath.length > 0) {
+      try {
+        const newRoute = {
+          id: Date.now().toString(),
+          path: routePath,
+          points: routePoints,
+        };
 
-  //       const existingRoutes =
-  //         JSON.parse(await AsyncStorage.getItem('routes')) || [];
-  //       const updatedRoutes = [...existingRoutes, newRoute];
+        const existingRoutes =
+          JSON.parse(await AsyncStorage.getItem('routes')) || [];
+        const updatedRoutes = [...existingRoutes, newRoute];
 
-  //       await AsyncStorage.setItem('routes', JSON.stringify(updatedRoutes));
-  //       setStore(prev => ({
-  //         ...prev,
-  //         routes: updatedRoutes,
-  //       }));
+        await AsyncStorage.setItem('routes', JSON.stringify(updatedRoutes));
+        setStore(prev => ({
+          ...prev,
+          routes: updatedRoutes,
+        }));
 
-  //       // clearRoute();
-  //       setIsRouteMode(false);
-  //     } catch (error) {
-  //       console.error('Error saving route:', error);
-  //     }
-  //   }
-  // };
+        // clearRoute();
+        setIsRouteMode(false);
+      } catch (error) {
+        console.error('Error saving route:', error);
+      }
+    }
+  };
 
   const goToMyLocation = async () => {
     try {
@@ -203,6 +205,7 @@ const Map = ({navigation}) => {
             key={`point-${index}`}
             coordinate={point}
             pinColor="#DC143C"
+            title={index === 0 ? 'Start Point' : 'End Point'}
           />
         ))}
 
@@ -223,7 +226,7 @@ const Map = ({navigation}) => {
         )}
       </MapView>
 
-      {/* Instruction Text */}
+      {/* Instructions */}
       {!isRouteMode && (
         <View style={styles.instructionContainer}>
           <Text style={styles.instructionText}>
@@ -235,11 +238,15 @@ const Map = ({navigation}) => {
       {isRouteMode && (
         <View style={styles.instructionContainer}>
           <Text style={styles.instructionText}>
-            Tap on the map to add route points
+            {routeStage === 'A' && 'Tap to select starting point (A)'}
+            {routeStage === 'B' && 'Tap to select destination point (B)'}
+            {routeStage === 'complete' &&
+              'Route created! Save or clear to start over'}
           </Text>
         </View>
       )}
 
+      {/* Route Controls */}
       <View style={styles.routeControls}>
         <TouchableOpacity
           style={[styles.routeButton, isRouteMode && styles.routeButtonActive]}
@@ -254,7 +261,7 @@ const Map = ({navigation}) => {
           </Text>
         </TouchableOpacity>
 
-        {isRouteMode && routePoints.length >= 2 && (
+        {isRouteMode && routeStage === 'complete' && (
           <>
             {/* <TouchableOpacity style={styles.routeButton} onPress={clearRoute}>
               <Text style={styles.routeButtonText}>Clear</Text>
@@ -379,5 +386,25 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: 'white',
   },
- 
+  locationButton: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 25,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  locationButtonText: {
+    color: '#333',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
 });
