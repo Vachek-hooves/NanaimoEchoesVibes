@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Home, HiScreen } from './screen';
-import { Collection, Map, Prediction } from './ScreenMenu';
+import {StyleSheet, Text, View, Image} from 'react-native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {Home, HiScreen} from './screen';
+import {Collection, Map, Prediction} from './ScreenMenu';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,12 +21,12 @@ const NavigationMenu = () => {
         name="Home"
         component={Home}
         options={{
-          tabBarIcon: ({ focused }) => (
+          tabBarIcon: ({focused}) => (
             <Image
               source={require('./assets/image/icons/Home.png')}
               style={[
                 styles.tabIcon,
-                { tintColor: focused ? '#DC143C' : '#999' }
+                {tintColor: focused ? '#DC143C' : '#999'},
               ]}
               resizeMode="contain"
             />
@@ -37,12 +37,12 @@ const NavigationMenu = () => {
         name="Map"
         component={Map}
         options={{
-          tabBarIcon: ({ focused }) => (
+          tabBarIcon: ({focused}) => (
             <Image
               source={require('./assets/image/icons/Map.png')}
               style={[
                 styles.tabIcon,
-                { tintColor: focused ? '#DC143C' : '#999' }
+                {tintColor: focused ? '#DC143C' : '#999'},
               ]}
               resizeMode="contain"
             />
@@ -53,12 +53,12 @@ const NavigationMenu = () => {
         name="Collection"
         component={Collection}
         options={{
-          tabBarIcon: ({ focused }) => (
+          tabBarIcon: ({focused}) => (
             <Image
               source={require('./assets/image/icons/Collection.png')}
               style={[
                 styles.tabIcon,
-                { tintColor: focused ? '#DC143C' : '#999' }
+                {tintColor: focused ? '#DC143C' : '#999'},
               ]}
               resizeMode="contain"
             />
@@ -69,12 +69,12 @@ const NavigationMenu = () => {
         name="Prediction"
         component={Prediction}
         options={{
-          tabBarIcon: ({ focused }) => (
+          tabBarIcon: ({focused}) => (
             <Image
               source={require('./assets/image/icons/Prediction.png')}
               style={[
                 styles.tabIcon,
-                { tintColor: focused ? '#DC143C' : '#999' }
+                {tintColor: focused ? '#DC143C' : '#999'},
               ]}
               resizeMode="contain"
             />
