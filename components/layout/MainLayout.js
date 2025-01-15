@@ -6,7 +6,9 @@ import Header from '../ui/Header';
 const MainLayout = ({ children }) => {
   return (
     <LinearGradient
-      colors={['#F5F7FA', '#E4EfE9']}
+      // Canadian-inspired color scheme
+      colors={['#F5F4FA', '#E8EEFB', '#EBF0F9']}
+      locations={[0, 0.5, 1]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.container}>
