@@ -1,42 +1,50 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 
-const UserRouteDetails = ({routeDetails}) => {
+const UserRouteDetails = ({ routeDetails }) => {
   if (!routeDetails) return null;
 
-  // Convert distance to km if > 1000m, otherwise show in meters
-  const formatDistance = meters => {
-    if (meters >= 1000) {
-      return `${(meters / 1000).toFixed(1)} km`;
-    }
-    return `${Math.round(meters)} m`;
+  const formatDistance = (meters) => {
+    const feet = Math.round(meters * 3.28084);
+    return `${Math.round(feet/100)/10}`;
   };
 
-  // Convert duration from seconds to minutes
-  const formatDuration = seconds => {
-    const minutes = Math.round(seconds / 60);
-    return `${minutes} min`;
+  const formatDuration = (seconds) => {
+    return `${Math.ceil(seconds / 60)}`;
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.detailRow}>
-        <View style={styles.detailItem}>
-          <Text style={styles.label}>Distance</Text>
-          <Text style={styles.value}>
-            {formatDistance(routeDetails.distance)}
-          </Text>
+      <View style={styles.statsContainer}>
+        <View style={styles.statBox}>
+          <View style={styles.iconContainer}>
+            <Text style={styles.icon}>🏃‍♂️</Text>
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.value}>{formatDistance(routeDetails.distance)}</Text>
+            <Text style={styles.unit}>mi</Text>
+          </View>
         </View>
-        <View style={styles.separator} />
-        <View style={styles.detailItem}>
-          <Text style={styles.label}>Duration</Text>
-          <Text style={styles.value}>
-            {formatDuration(routeDetails.duration)}
-          </Text>
+        
+        <View style={styles.divider} />
+        
+        <View style={styles.statBox}>
+          <View style={styles.iconContainer}>
+            <Text style={styles.icon}>⏱️</Text>
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.value}>{formatDuration(routeDetails.duration)}</Text>
+            <Text style={styles.unit}>min</Text>
+          </View>
         </View>
       </View>
+
       {routeDetails.legs?.[0]?.summary && (
-        <Text style={styles.summary}>via {routeDetails.legs[0].summary}</Text>
+        <View style={styles.routeNameContainer}>
+          <Text style={styles.routeName}>
+            {routeDetails.legs[0].summary}
+          </Text>
+        </View>
       )}
     </View>
   );
@@ -44,43 +52,64 @@ const UserRouteDetails = ({routeDetails}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    borderRadius: 12,
-    padding: 10,
-    marginTop: 8,
-    minWidth: 180,
+    alignItems: 'center',
+    gap: 8,
   },
-  detailRow: {
+  statsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    backgroundColor: 'rgba(52, 73, 94, 0.95)',
+    borderRadius: 15,
+    padding: 12,
+    minWidth: 200,
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  detailItem: {
+  statBox: {
+    flexDirection: 'row',
     alignItems: 'center',
+    gap: 8,
     flex: 1,
+    justifyContent: 'center',
   },
-  separator: {
-    width: 1,
-    height: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    marginHorizontal: 16,
+  iconContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 10,
+    padding: 4,
   },
-  label: {
-    color: '#999',
-    fontSize: 12,
-    marginBottom: 4,
+  icon: {
+    fontSize: 16,
+  },
+  textContainer: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    gap: 2,
   },
   value: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
+    color: '#ECF0F1',
+    fontSize: 20,
+    fontWeight: '600',
   },
-  summary: {
-    color: '#999',
-    fontSize: 12,
-    textAlign: 'center',
-    marginTop: 8,
-    fontStyle: 'italic',
+  unit: {
+    color: '#BDC3C7',
+    fontSize: 14,
+    marginLeft: 2,
+  },
+  divider: {
+    width: 1,
+    height: '100%',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    marginHorizontal: 12,
+  },
+  routeNameContainer: {
+    backgroundColor: 'rgba(52, 73, 94, 0.95)',
+    paddingVertical: 6,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+  },
+  routeName: {
+    color: '#ECF0F1',
+    fontSize: 13,
+    fontWeight: '500',
   },
 });
 
