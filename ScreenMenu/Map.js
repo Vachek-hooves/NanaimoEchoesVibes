@@ -223,9 +223,16 @@ const Map = ({navigation}) => {
         {isRouteMode && (
           <Polyline
             coordinates={routePath}
-            strokeColor="#DC143C"
+            strokeColor="#4158D0"
+            // strokeColor="#DC143C"
             strokeWidth={3}
-            lineDashPattern={[1, 7]}
+            lineDashPattern={[1, 7, 3]}
+            strokeColors={[
+              '#4158D0', // Start color (matching header)
+              '#C850C0', // Middle color
+              '#BCCC70', // End color (matching header)
+              '#DC143C',
+            ]}
           />
         )}
       </MapView>
@@ -329,7 +336,7 @@ const styles = StyleSheet.create({
   },
   instructionContainer: {
     position: 'absolute',
-    top: '25%',
+    top: '0%',
     left: 20,
     right: 20,
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
