@@ -26,9 +26,10 @@ const Header = () => {
 
   return (
     <LinearGradient
-      colors={['#4158D0', '#C850C0', '#FFCC70']}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}
+      // colors={['#4158D0', '#C850C0', '#FFCC70']}
+      colors={['#F7F9FC',   '#DC143C']}
+      start={{x: 1, y: 0}}
+      end={{x: 0, y: 1}}
       style={styles.header}>
       <View style={{padding: 10}}>
         <Text style={styles.welcomeText}>Welcome back, {nickname}!</Text>

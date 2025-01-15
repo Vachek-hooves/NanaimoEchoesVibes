@@ -3,14 +3,28 @@ import {StyleSheet, Text, View, Image} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Home, HiScreen} from './screen';
 import {Collection, Map, Prediction} from './ScreenMenu';
+import LinearGradient from 'react-native-linear-gradient';
 
 const Tab = createBottomTabNavigator();
+
+const TabBar = ({children}) => {
+  return (
+    <LinearGradient
+      colors={['#F7F9FC', '#EFF5F9',  '#DC143C']}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}
+      style={styles.tabBarGradient}>
+      {children}
+    </LinearGradient>
+  );
+};
 
 const NavigationMenu = () => {
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
+        tabBarBackground: () => <TabBar />,
         tabBarStyle: styles.tabBar,
         tabBarShowLabel: true,
         tabBarActiveTintColor: '#DC143C',
@@ -94,6 +108,23 @@ const styles = StyleSheet.create({
     shadowOpacity: 0,
     paddingTop: 5,
     paddingBottom: 25,
+  },
+  tabBarGradient: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 90,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 5,
   },
   tabIcon: {
     width: 34,
