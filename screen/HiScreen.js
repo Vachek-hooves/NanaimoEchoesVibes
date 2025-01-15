@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React, {useState} from 'react';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 const HiScreen = () => {
   const navigation = useNavigation();
@@ -64,10 +64,11 @@ const styles = StyleSheet.create({
     marginBottom: 100,
   },
   header: {
-    fontSize: 32,
+    fontSize: 42,
     fontWeight: 'bold',
     color: 'white',
     marginBottom: 10,
+    color: '#DC143C',
   },
   description: {
     fontSize: 18,

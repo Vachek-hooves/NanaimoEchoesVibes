@@ -12,6 +12,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { launchImageLibrary } from 'react-native-image-picker';
+import LinearGradient from 'react-native-linear-gradient';
 
 const Name = () => {
   const [nickname, setNickname] = useState('');
@@ -73,7 +74,11 @@ const Name = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <LinearGradient
+      colors={['#F7F9FC', '#DC143C']}
+      start={{x: 1, y: 0}}
+      end={{x: 0, y: 1}}
+      style={styles.container}>
       <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
         <Text style={styles.skipText}>Skip</Text>
       </TouchableOpacity>
@@ -113,7 +118,7 @@ const Name = () => {
           </Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </LinearGradient>
   );
 };
 
@@ -124,15 +129,17 @@ const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#DC143C',
+   
   },
   skipButton: {
     alignSelf: 'flex-end',
     padding: 16,
+    paddingTop:'20%'
   },
   skipText: {
-    color: 'white',
-    fontSize: 16,
+   
+    color: 'black',
+    fontSize: 18,
     fontWeight: '500',
   },
   contentContainer: {

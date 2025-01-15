@@ -41,7 +41,7 @@ const Header = () => {
         style={styles.settingsButton}
         onPress={() => navigation.navigate('Name')}>
         <LinearGradient
-          colors={['rgba(255,255,255,0.2)', 'rgba(255,255,255,0.1)']}
+          colors={['rgba(0,0,0,0.5)', 'rgba(255,255,255,0.6)']}
           style={styles.settingsGradient}>
           <Image
             source={require('../../assets/image/icons/settings.png')}
@@ -92,9 +92,9 @@ const styles = StyleSheet.create({
     borderRadius: 22,
   },
   settingsIcon: {
+    width: 55,
     // padding: 15,
-    width: 45,
-    height: 45,
+    height: 55,
     tintColor: 'white',
     padding:8
   },
