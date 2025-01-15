@@ -1,15 +1,29 @@
-import {StyleSheet, Text, View} from 'react-native';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import Header from '../ui/Header';
 
-const MainLayout = ({children}) => {
+const MainLayout = ({ children }) => {
   return (
-    <View style={{flex: 1, backgroundColor: '#fff'}}>
+    <LinearGradient
+      colors={['#F5F7FA', '#E4EfE9']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.container}>
       <Header />
-      {children}
-    </View>
+      <View style={styles.content}>{children}</View>
+    </LinearGradient>
   );
 };
 
-export default MainLayout;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
+});
 
-const styles = StyleSheet.create({});
+export default MainLayout;

@@ -1,6 +1,7 @@
-import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useState, useEffect} from 'react';
+import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 
 const Header = () => {
@@ -24,8 +25,12 @@ const Header = () => {
   };
 
   return (
-    <View style={styles.header}>
-      <View>
+    <LinearGradient
+      colors={['#4158D0', '#C850C0', '#FFCC70']}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 1}}
+      style={styles.header}>
+      <View style={{padding: 10}}>
         <Text style={styles.welcomeText}>Welcome back, {nickname}!</Text>
         <Text style={styles.subtitleText}>
           Your journey through{'\n'}Nanaimo continues...
@@ -34,52 +39,64 @@ const Header = () => {
       <TouchableOpacity
         style={styles.settingsButton}
         onPress={() => navigation.navigate('Name')}>
-        <Image
-          source={require('../../assets/image/icons/settings.png')}
-          style={{width: 30, height: 30}}
-        />
+        <LinearGradient
+          colors={['rgba(255,255,255,0.2)', 'rgba(255,255,255,0.1)']}
+          style={styles.settingsGradient}>
+          <Image
+            source={require('../../assets/image/icons/settings.png')}
+            style={styles.settingsIcon}
+          />
+        </LinearGradient>
       </TouchableOpacity>
-    </View>
+    </LinearGradient>
   );
 };
 
-export default Header;
-
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: '#DC143C',
-    padding: 20,
-    paddingBottom: 30,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
+    // padding: 20,
+    paddingBottom: 10,
+    borderBottomLeftRadius: 28,
+    borderBottomRightRadius: 28,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    paddingTop: 60,
+    alignItems: 'flex-end',
+    // paddingTop: 60,
     zIndex: 1,
+    height: '25%',
   },
   welcomeText: {
     color: 'white',
     fontSize: 24,
     fontWeight: '500',
     marginBottom: 8,
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: {width: 1, height: 1},
+    textShadowRadius: 3,
   },
   subtitleText: {
     color: 'white',
     fontSize: 28,
     fontWeight: 'bold',
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: {width: 1, height: 1},
+    textShadowRadius: 3,
   },
   settingsButton: {
-    // width: 44,
-    // height: 44,
     borderRadius: 22,
-    backgroundColor: '#000',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 15,
-    borderRadius: '50%',
+    overflow: 'hidden',
+    margin: 20,
+  },
+  settingsGradient: {
+    borderRadius: 22,
   },
   settingsIcon: {
-    fontSize: 24,
+    // padding: 15,
+    width: 45,
+    height: 45,
+    tintColor: 'white',
+    padding:8
   },
 });
+
+export default Header;
