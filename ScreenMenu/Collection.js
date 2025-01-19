@@ -12,6 +12,8 @@ import {
 import {useNanaimoContext} from '../store/context';
 import MainLayout from '../components/layout/MainLayout';
 import CollectionItemModal from '../components/actions/CollectionItemModal';
+import UpdateLayout from '../components/layout/UpdateLayout';
+import Header from '../components/ui/Header';
 
 const Collection = () => {
   const {store} = useNanaimoContext();
@@ -56,7 +58,9 @@ const Collection = () => {
   );
 
   return (
-    <MainLayout>
+    <UpdateLayout>
+      {/* <MainLayout> */}
+      <Header />
       <View style={styles.content}>
         <Text style={styles.sectionTitle}>✨ Your Nanaimo Collections</Text>
 
@@ -98,7 +102,8 @@ const Collection = () => {
         onClose={() => setModalVisible(false)}
         item={selectedItem}
       />
-    </MainLayout>
+      {/* </MainLayout> */}
+    </UpdateLayout>
   );
 };
 

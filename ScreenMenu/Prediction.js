@@ -14,6 +14,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNanaimoContext} from '../store/context';
 import {PREDICTIONS} from '../data/predictions';
 import MainLayout from '../components/layout/MainLayout';
+import UpdateLayout from '../components/layout/UpdateLayout';
+import Header from '../components/ui/Header';
 
 const Prediction = () => {
   const {store, updateFavoritePredictions} = useNanaimoContext();
@@ -132,7 +134,9 @@ const Prediction = () => {
   };
 
   return (
-    <MainLayout>
+    <UpdateLayout>
+      {/* <MainLayout> */}
+      <Header />
       <View style={styles.content}>
         <Animated.View
           style={[styles.cookieContainer, {transform: [{scale: scaleAnim}]}]}>
@@ -197,7 +201,8 @@ const Prediction = () => {
           </ScrollView>
         </View>
       </View>
-    </MainLayout>
+      {/* </MainLayout> */}
+    </UpdateLayout>
   );
 };
 
@@ -232,7 +237,8 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#000',
+    // backgroundColor: '#000',
+    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -265,6 +271,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 16,
+    color: '#fff',
   },
   recentList: {
     flex: 1,
@@ -306,7 +313,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: '#fff',
     shadowOffset: {
       width: 0,
       height: 2,

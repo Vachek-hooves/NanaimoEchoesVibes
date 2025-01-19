@@ -1,47 +1,56 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { PREDICTIONS } from '../data/predictions';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {PREDICTIONS} from '../data/predictions';
 import MainLayout from '../components/layout/MainLayout';
-import { useNanaimoContext } from '../store/context';
+import {useNanaimoContext} from '../store/context';
+import UpdateLayout from '../components/layout/UpdateLayout';
+import Header from '../components/ui/Header';
 
 const Home = () => {
   const navigation = useNavigation();
-  const { store } = useNanaimoContext();
-  
+  const {store} = useNanaimoContext();
+
   // Get favorite predictions
-  const favoritePredictions = PREDICTIONS.filter(pred => 
-    store.favoritePredictions?.includes(pred.id) || false
+  const favoritePredictions = PREDICTIONS.filter(
+    pred => store.favoritePredictions?.includes(pred.id) || false,
   );
 
   // Get favorite spots
-  const favoriteSpots = store.places.filter(place => 
-    store.favoriteSpots?.includes(place.id) || false
+  const favoriteSpots = store.places.filter(
+    place => store.favoriteSpots?.includes(place.id) || false,
   );
 
-  const handleSpotPress = (spot) => {
-    navigation.navigate('SpotDetails', { spot });
+  const handleSpotPress = spot => {
+    navigation.navigate('SpotDetails', {spot});
   };
 
   return (
-    <MainLayout>
+    <UpdateLayout>
+      {/* <MainLayout> */}
+      <Header />
       <ScrollView style={styles.content}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionIcon}>📍</Text>
-            <Text style={styles.sectionTitle}>Your Favorite Places</Text>
-          </View>
-          <Text style={styles.sectionSubtext}>Tap to revisit collection</Text>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionIcon}>📍</Text>
+          <Text style={styles.sectionTitle}>Your Favorite Places</Text>
+        </View>
+        <Text style={styles.sectionSubtext}>Tap to revisit collection</Text>
         <TouchableOpacity style={styles.section}>
-
           {favoriteSpots.length > 0 ? (
             <View style={styles.spotsContainer}>
-              {favoriteSpots.map((spot) => (
-                <TouchableOpacity 
-                  key={spot.id} 
+              {favoriteSpots.map(spot => (
+                <TouchableOpacity
+                  key={spot.id}
                   style={styles.spotCard}
-                  onPress={() => handleSpotPress(spot)}
-                >
-                  <Image source={{ uri: spot.image }} style={styles.spotImage} />
+                  onPress={() => handleSpotPress(spot)}>
+                  <Image source={{uri: spot.image}} style={styles.spotImage} />
                   <View style={styles.spotContent}>
                     <Text style={styles.spotTitle}>{spot.header}</Text>
                     <Text style={styles.spotDescription} numberOfLines={2}>
@@ -67,10 +76,10 @@ const Home = () => {
           <Text style={styles.sectionSubtext}>
             Tap to view all saved predictions
           </Text>
-          
+
           {(favoritePredictions?.length || 0) > 0 ? (
             <View style={styles.predictionsContainer}>
-              {favoritePredictions.map((prediction) => (
+              {favoritePredictions.map(prediction => (
                 <View key={prediction.id} style={styles.predictionCard}>
                   <Text style={styles.predictionText}>{prediction.text}</Text>
                   <Text style={styles.favoriteIcon}>❤️</Text>
@@ -84,7 +93,8 @@ const Home = () => {
           )}
         </View>
       </ScrollView>
-    </MainLayout>
+      {/* </MainLayout> */}
+    </UpdateLayout>
   );
 };
 

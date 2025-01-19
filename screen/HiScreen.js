@@ -23,7 +23,7 @@ const HiScreen = () => {
 
   return (
     <ImageBackground
-      source={require('../assets/image/bg/bg.png')} // Make sure to add your image
+      source={require('../assets/image/bg/Nabg.png')} // Make sure to add your image
       style={styles.background}>
       <View style={styles.container}>
         <View style={styles.textContainer}>

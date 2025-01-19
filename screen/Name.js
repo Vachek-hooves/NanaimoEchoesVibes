@@ -8,11 +8,12 @@ import {
   Dimensions,
   Image,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import React, {useState, useEffect} from 'react';
+import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { launchImageLibrary } from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 import LinearGradient from 'react-native-linear-gradient';
+import UpdateLayout from '../components/layout/UpdateLayout';
 
 const Name = () => {
   const [nickname, setNickname] = useState('');
@@ -28,7 +29,7 @@ const Name = () => {
     try {
       const userData = await AsyncStorage.getItem('userData');
       if (userData) {
-        const { name, image } = JSON.parse(userData);
+        const {name, image} = JSON.parse(userData);
         setNickname(name);
         setUserImage(image);
         setIsExistingUser(true);
@@ -74,32 +75,35 @@ const Name = () => {
   };
 
   return (
-    <LinearGradient
-      colors={['#F7F9FC', '#DC143C']}
-      start={{x: 1, y: 0}}
-      end={{x: 0, y: 1}}
-      style={styles.container}>
+    <UpdateLayout>
+      {/* <LinearGradient
+        colors={['#F7F9FC', '#DC143C']}
+        start={{x: 1, y: 0}}
+        end={{x: 0, y: 1}}
+        style={styles.container}> */}
       <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
         <Text style={styles.skipText}>Skip</Text>
       </TouchableOpacity>
 
       <View style={styles.contentContainer}>
         <Text style={styles.header}>
-          {isExistingUser 
-            ? 'Welcome back! Update your profile?' 
+          {isExistingUser
+            ? 'Welcome back! Update your profile?'
             : 'Let the echoes of your journey start with a nickname'}
         </Text>
 
-        <TouchableOpacity style={styles.imageContainer} onPress={handleImagePick}>
+        <TouchableOpacity
+          style={styles.imageContainer}
+          onPress={handleImagePick}>
           {userImage ? (
-            <Image source={{ uri: userImage }} style={styles.userImage} />
+            <Image source={{uri: userImage}} style={styles.userImage} />
           ) : (
             <View style={styles.imagePlaceholder}>
               <Text style={styles.imagePlaceholderText}>Add Photo</Text>
             </View>
           )}
         </TouchableOpacity>
-        
+
         <TextInput
           style={styles.input}
           placeholder="Enter your new nickname"
@@ -108,39 +112,41 @@ const Name = () => {
           onChangeText={setNickname}
         />
 
-        <TouchableOpacity 
-          style={[styles.setButton, !nickname.trim() && styles.setButtonDisabled]}
+        <TouchableOpacity
+          style={[
+            styles.setButton,
+            !nickname.trim() && styles.setButtonDisabled,
+          ]}
           onPress={saveUserData}
-          disabled={!nickname.trim()}
-        >
+          disabled={!nickname.trim()}>
           <Text style={styles.setButtonText}>
             {isExistingUser ? 'Update' : 'Set'}
           </Text>
         </TouchableOpacity>
       </View>
-    </LinearGradient>
+      {/* </LinearGradient> */}
+    </UpdateLayout>
   );
 };
 
 export default Name;
 
-const { width } = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-   
   },
   skipButton: {
     alignSelf: 'flex-end',
     padding: 16,
-    paddingTop:'20%'
+    paddingTop: '20%',
   },
   skipText: {
-   
     color: 'black',
     fontSize: 18,
     fontWeight: '500',
+    color: '#fff',
   },
   contentContainer: {
     flex: 1,
